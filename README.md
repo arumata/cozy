@@ -1,3 +1,26 @@
+> **This branch is not upstream Cozy.**
+>
+> It is the build running on `comp1`: upstream `master` plus fixes that
+> upstream has not merged, and a build that targets the stable GNOME runtime
+> instead of the nightly one.
+>
+> | Change | Upstream |
+> |---|---|
+> | `importer.py` — compare mtime truncated, so a scan stops re-importing the whole library | [PR #1055](https://github.com/geigi/cozy/pull/1055) |
+> | `main_view.py` — don't show the welcome dialog to upgrading users | [PR #1056](https://github.com/geigi/cozy/pull/1056) |
+> | `book_card.py`, `book_card.blp` — reader on the card, wrapping titles | local preference, not proposed |
+> | `flatpak-stable/`, `build-stable-flatpak.yml` — build on GNOME 49 | local, upstream builds on nightly |
+>
+> Upstream is dormant: last commit to `master` 2025-10-19, last release
+> 1.3.0 in March 2024, 20 open PRs. Until that changes this branch is where
+> the running build comes from.
+>
+> Rebuild: push here, then `gh run download <run-id>` and
+> `flatpak install --user --bundle ./com.github.geigi.cozy.flatpak`.
+> Notes live in `DEVOPS/HOST/docs/cozy-audiobooks.md` on that machine.
+
+---
+
 <p align="center">
   <img width="200" height="200" src="https://raw.githubusercontent.com/geigi/cozy/master/data/icons/hicolor/scalable/apps/com.github.geigi.cozy.svg">
 </p>
