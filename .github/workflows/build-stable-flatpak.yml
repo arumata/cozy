@@ -19,7 +19,10 @@ jobs:
   flatpak:
     runs-on: ubuntu-latest
     container:
-      image: bilelmoussaoui/flatpak-github-actions:gnome-49
+      # У образа сборщика нет тега новее gnome-47 (проверено в Docker Hub),
+      # но нужен он только ради самого flatpak-builder: рантайм и SDK 49
+      # ставятся ниже из Flathub.
+      image: bilelmoussaoui/flatpak-github-actions:gnome-47
       options: --privileged
 
     steps:
@@ -31,3 +34,5 @@ jobs:
           manifest-path: flatpak-stable/com.github.geigi.cozy.json
           cache-key: flatpak-stable-${{ github.sha }}
           arch: x86_64
+          repository-name: flathub
+          repository-url: https://dl.flathub.org/repo/flathub.flatpakrepo
