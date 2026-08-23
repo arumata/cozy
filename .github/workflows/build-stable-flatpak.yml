@@ -14,6 +14,9 @@ on:
   workflow_dispatch:
   push:
     branches: ["master-fix-rescan"]
+    # Правка документации не меняет сборку — не жечь на неё CI.
+    paths-ignore:
+      - "**/*.md"
 
 jobs:
   flatpak:
