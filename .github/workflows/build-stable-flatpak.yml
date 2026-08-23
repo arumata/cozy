@@ -1,0 +1,38 @@
+# Собирает Cozy 1.3.0 с исправленным сравнением mtime на СТАБИЛЬНОМ рантайме
+# GNOME 49 — том же, что у сборки из Flathub, и уже установленном на comp1.
+#
+# Штатный flatpak.yml собирает на org.gnome.Platform//master (nightly): такой
+# bundle потянул бы за собой ещё полтора гигабайта nightly-рантайма. Здесь
+# берётся манифест Flathub, у которого источник заменён на текущий чекаут.
+#
+# Запуск: gh workflow run build-stable-flatpak.yml --ref master-fix-rescan
+# Результат: артефакт с com.github.geigi.cozy.flatpak, ставится
+#   flatpak install --user ./com.github.geigi.cozy.flatpak
+name: Build stable flatpak
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["master-fix-rescan"]
+
+jobs:
+  flatpak:
+    runs-on: ubuntu-latest
+    container:
+      # У образа сборщика нет тега новее gnome-47 (проверено в Docker Hub),
+      # но нужен он только ради самого flatpak-builder: рантайм и SDK 49
+      # ставятся ниже из Flathub.
+      image: bilelmoussaoui/flatpak-github-actions:gnome-47
+      options: --privileged
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: flatpak/flatpak-github-actions/flatpak-builder@v6.5
+        with:
+          bundle: com.github.geigi.cozy.flatpak
+          manifest-path: flatpak-stable/com.github.geigi.cozy.json
+          cache-key: flatpak-stable-${{ github.sha }}
+          arch: x86_64
+          repository-name: flathub
+          repository-url: https://dl.flathub.org/repo/flathub.flatpakrepo

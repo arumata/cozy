@@ -82,7 +82,9 @@ class BookCard(Gtk.FlowBoxChild):
 
         self.book = book
         self.title = book.name
-        self.author = book.author
+        # With several narrations of the same book the cards are otherwise
+        # indistinguishable — show the reader next to the author.
+        self.author = f"{book.author} · {book.reader}" if book.reader else book.author
 
         paintable = self.artwork_cache.get_cover_paintable(
             book, self.get_scale_factor(), ALBUM_ART_SIZE
