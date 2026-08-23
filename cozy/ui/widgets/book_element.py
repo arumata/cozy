@@ -1,4 +1,4 @@
-from gi.repository import Gtk, GObject, Gdk, Gio
+from gi.repository import Gtk, GObject, Gdk, Gio, Pango
 
 from cozy.model.book import Book
 from cozy.ui.widgets.album_element import AlbumElement
@@ -20,8 +20,15 @@ class BookElement(Gtk.FlowBoxChild):
 
         self.name_label.set_text(book.name)
         self.name_label.set_tooltip_text(book.name)
-        self.author_label.set_text(book.author)
-        self.author_label.set_tooltip_text(book.author)
+        self.name_label.set_wrap(True)
+        self.name_label.set_lines(4)
+        self.name_label.set_ellipsize(Pango.EllipsizeMode.END)
+        subtitle = f"{book.author} · {book.reader}" if book.reader else book.author
+        self.author_label.set_text(subtitle)
+        self.author_label.set_tooltip_text(subtitle)
+        self.author_label.set_wrap(True)
+        self.author_label.set_lines(2)
+        self.author_label.set_ellipsize(Pango.EllipsizeMode.END)
 
         self.art = AlbumElement(self.book)
         self.art.connect("play-pause-clicked", self._on_album_art_press_event)

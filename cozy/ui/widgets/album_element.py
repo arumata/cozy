@@ -33,11 +33,16 @@ class AlbumElement(Gtk.Box):
         super().__init__()
 
         self._book: Book = book
-        paintable = self.artwork_cache.get_cover_paintable(book, 1, ALBUM_ART_SIZE)
+        paintable = self.artwork_cache.get_cover_paintable(book, self.get_scale_factor(), 2 * ALBUM_ART_SIZE)
 
         if paintable:
-            self.album_art_image.set_from_paintable(paintable)
-            self.album_art_image.set_size_request(ALBUM_ART_SIZE, ALBUM_ART_SIZE)
+            # GtkImage sizes paintables by icon size on the GNOME 4x runtime,
+            # which renders the cover as a ~24 px stamp. Upstream master uses
+            # GtkPicture for the card — swap it in here.
+            picture = Gtk.Picture.new_for_paintable(paintable)
+            picture.set_size_request(ALBUM_ART_SIZE, ALBUM_ART_SIZE)
+            self.album_art_image.get_parent().set_child(picture)
+            self.album_art_image = picture
         else:
             self.album_art_image.set_from_icon_name("book-open-variant-symbolic")
             self.album_art_image.props.pixel_size = ALBUM_ART_SIZE
